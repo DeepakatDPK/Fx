@@ -19,6 +19,27 @@ interface Message {
   mode?: 'quick' | 'deep'
 }
 
+interface TradingSignal {
+  currency_pair: string;
+  signal: string;
+  confidence: number;
+  stop_loss: number;
+  take_profit: number;
+  parameters: any;
+  reasoning: string;
+  timestamp: string;
+}
+
+interface ConsensusData {
+  final_decision: string;
+  currency_pair: string;
+  reasoning: string;
+  confidence_score: number;
+  suggested_entry_price: number;
+  stop_loss: number;
+  take_profit: number;
+}
+
 export default function Dashboard() {
   const [messages, setMessages] = useState<Message[]>([
     {

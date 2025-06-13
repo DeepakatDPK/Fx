@@ -35,7 +35,7 @@ DEFAULT_CONFIG = {
 
 def validate_api_keys():
     """Validate that all required API keys are present."""
-    required_keys = ['OPENAI_API_KEY']
+    required_keys = ['OPENAI_API_KEY', 'FINNHUB_API_KEY'] # Added FINNHUB_API_KEY
     missing_keys = [key for key in required_keys if not os.getenv(key)]
     
     if missing_keys:
