@@ -6,6 +6,13 @@ import uuid
 app = Flask(__name__)
 CORS(app)
 
+# Define the list of agent names
+AGENT_NAMES = [
+    "Market Analyst", "Social Analyst", "News Analyst", "Fundamentals Analyst",
+    "Bull Researcher", "Bear Researcher", "Research Manager", "Trader",
+    "Risky Analyst", "Neutral Analyst", "Safe Analyst", "Portfolio Manager"
+]
+
 # In-memory storage for trades only
 mock_pending_trades_store: Dict[str, Dict[str, Any]] = {}
 
@@ -75,6 +82,31 @@ def initialize_mock_trades():
     print(f"Mock trades initialized. Count: {len(mock_pending_trades_store)}")
 
 initialize_mock_trades()
+
+@app.route('/api/agents', methods=['GET'])
+def get_agents():
+    """Returns the list of available agent names."""
+    return jsonify(AGENT_NAMES)
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """Handles chat messages to agents or StroudAI."""
+    data = request.get_json()
+    if not data or 'message' not in data:
+        return jsonify({"error": "Missing message in request"}), 400
+
+    message = data['message']
+    agent_id = data.get('agent_id')
+
+    if agent_id:
+        if agent_id in AGENT_NAMES:
+            response_text = f"Response from {agent_id}: You said '{message}'"
+        else:
+            return jsonify({"error": f"Agent {agent_id} not found"}), 404
+    else:
+        response_text = f"Response from StroudAI: You said '{message}'"
+
+    return jsonify({"sender": "ai", "text": response_text})
 
 @app.route('/api/pending_trades', methods=['GET'])
 def pending_trades():
